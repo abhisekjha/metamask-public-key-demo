@@ -3,14 +3,18 @@ document.getElementById('connectButton').addEventListener('click', connectToMeta
 async function connectToMetaMask() {
     if (typeof window.ethereum !== 'undefined') {
         try {
-            // Request account access
+           
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const account = accounts[0];
             console.log('Connected account:', account);
             
-            // Retrieve public key
+            
             const publicKey = await getPublicKey(account);
-            document.getElementById('publicKey').innerText = `Public Key: ${publicKey}`;
+            if (publicKey) {
+                document.getElementById('publicKey').innerText = `Public Key: ${publicKey}`;
+            } else {
+                document.getElementById('publicKey').innerText = 'Public key retrieval failed. Please ensure permissions are granted.';
+            }
         } catch (error) {
             console.error('Error connecting to MetaMask:', error);
         }
@@ -32,5 +36,7 @@ async function getPublicKey(account) {
         } else {
             console.error('An error occurred:', error);
         }
+        return null;
     }
 }
+
